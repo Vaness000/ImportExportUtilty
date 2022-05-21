@@ -1,0 +1,368 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище QuizModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Answers">
+          <Key>
+            <PropertyRef Name="Answer_code" />
+          </Key>
+          <Property Name="Answer_code" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Question_code" Type="int" Nullable="false" />
+          <Property Name="Answer_text" Type="nvarchar" MaxLength="4000" Nullable="false" />
+          <Property Name="Answer_flag" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Images">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Image_data" Type="image" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Questions">
+          <Key>
+            <PropertyRef Name="Question_code" />
+          </Key>
+          <Property Name="Question_code" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Test_code" Type="int" Nullable="false" />
+          <Property Name="Question_text" Type="nvarchar" MaxLength="4000" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Tests">
+          <Key>
+            <PropertyRef Name="Test_code" />
+          </Key>
+          <Property Name="Test_code" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Test_title" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Test_GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Theory_flag" Type="bit" Nullable="false" />
+          <Property Name="Theory_Source" Type="varchar(max)" />
+          <Property Name="Test_time" Type="time" Precision="7" Nullable="false" />
+          <Property Name="Questions_amount" Type="int" Nullable="false" />
+          <Property Name="Amount_for_pass" Type="int" Nullable="false" />
+          <Property Name="Image_code" Type="int" />
+          <Property Name="Theory_code" Type="int" />
+        </EntityType>
+        <EntityType Name="Theory">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Theory_data" Type="ntext" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Answers_Questions">
+          <End Role="Questions" Type="Self.Questions" Multiplicity="1" />
+          <End Role="Answers" Type="Self.Answers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Questions">
+              <PropertyRef Name="Question_code" />
+            </Principal>
+            <Dependent Role="Answers">
+              <PropertyRef Name="Question_code" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Test_Image">
+          <End Role="Images" Type="Self.Images" Multiplicity="0..1" />
+          <End Role="Tests" Type="Self.Tests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Images">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Tests">
+              <PropertyRef Name="Image_code" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Test_Theory">
+          <End Role="Theory" Type="Self.Theory" Multiplicity="0..1" />
+          <End Role="Tests" Type="Self.Tests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Theory">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Tests">
+              <PropertyRef Name="Theory_code" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tests_Questions">
+          <End Role="Tests" Type="Self.Tests" Multiplicity="1" />
+          <End Role="Questions" Type="Self.Questions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tests">
+              <PropertyRef Name="Test_code" />
+            </Principal>
+            <Dependent Role="Questions">
+              <PropertyRef Name="Test_code" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище QuizModelContainer">
+          <EntitySet Name="Answers" EntityType="Self.Answers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Images" EntityType="Self.Images" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Questions" EntityType="Self.Questions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tests" EntityType="Self.Tests" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Theory" EntityType="Self.Theory" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Answers_Questions" Association="Self.FK_Answers_Questions">
+            <End Role="Questions" EntitySet="Questions" />
+            <End Role="Answers" EntitySet="Answers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Test_Image" Association="Self.FK_Test_Image">
+            <End Role="Images" EntitySet="Images" />
+            <End Role="Tests" EntitySet="Tests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Test_Theory" Association="Self.FK_Test_Theory">
+            <End Role="Theory" EntitySet="Theory" />
+            <End Role="Tests" EntitySet="Tests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tests_Questions" Association="Self.FK_Tests_Questions">
+            <End Role="Tests" EntitySet="Tests" />
+            <End Role="Questions" EntitySet="Questions" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="QuizModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Answer">
+          <Key>
+            <PropertyRef Name="Answer_code" />
+          </Key>
+          <Property Name="Answer_code" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Question_code" Type="Int32" Nullable="false" />
+          <Property Name="Answer_text" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Answer_flag" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Question" Relationship="Self.FK_Answers_Questions" FromRole="Answers" ToRole="Questions" />
+        </EntityType>
+        <EntityType Name="Image">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Image_data" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <NavigationProperty Name="Tests" Relationship="Self.FK_Test_Image" FromRole="Images" ToRole="Tests" />
+        </EntityType>
+        <EntityType Name="Question">
+          <Key>
+            <PropertyRef Name="Question_code" />
+          </Key>
+          <Property Name="Question_code" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Test_code" Type="Int32" Nullable="false" />
+          <Property Name="Question_text" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Answers" Relationship="Self.FK_Answers_Questions" FromRole="Questions" ToRole="Answers" />
+          <NavigationProperty Name="Test" Relationship="Self.FK_Tests_Questions" FromRole="Questions" ToRole="Tests" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Test">
+          <Key>
+            <PropertyRef Name="Test_code" />
+          </Key>
+          <Property Name="Test_code" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Test_title" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Test_GUID" Type="Guid" Nullable="false" />
+          <Property Name="Theory_flag" Type="Boolean" Nullable="false" />
+          <Property Name="Theory_Source" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Test_time" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="Questions_amount" Type="Int32" Nullable="false" />
+          <Property Name="Amount_for_pass" Type="Int32" Nullable="false" />
+          <Property Name="Image_code" Type="Int32" />
+          <Property Name="Theory_code" Type="Int32" />
+          <NavigationProperty Name="Image" Relationship="Self.FK_Test_Image" FromRole="Tests" ToRole="Images" />
+          <NavigationProperty Name="Questions" Relationship="Self.FK_Tests_Questions" FromRole="Tests" ToRole="Questions" />
+          <NavigationProperty Name="Theory" Relationship="Self.FK_Test_Theory" FromRole="Tests" ToRole="Theory" />
+        </EntityType>
+        <EntityType Name="Theory">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Theory_data" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Tests" Relationship="Self.FK_Test_Theory" FromRole="Theory" ToRole="Tests" />
+        </EntityType>
+        <Association Name="FK_Answers_Questions">
+          <End Role="Questions" Type="Self.Question" Multiplicity="1" />
+          <End Role="Answers" Type="Self.Answer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Questions">
+              <PropertyRef Name="Question_code" />
+            </Principal>
+            <Dependent Role="Answers">
+              <PropertyRef Name="Question_code" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Test_Image">
+          <End Role="Images" Type="Self.Image" Multiplicity="0..1" />
+          <End Role="Tests" Type="Self.Test" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Images">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Tests">
+              <PropertyRef Name="Image_code" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tests_Questions">
+          <End Role="Tests" Type="Self.Test" Multiplicity="1" />
+          <End Role="Questions" Type="Self.Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tests">
+              <PropertyRef Name="Test_code" />
+            </Principal>
+            <Dependent Role="Questions">
+              <PropertyRef Name="Test_code" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Test_Theory">
+          <End Role="Theory" Type="Self.Theory" Multiplicity="0..1" />
+          <End Role="Tests" Type="Self.Test" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Theory">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Tests">
+              <PropertyRef Name="Theory_code" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Answers" EntityType="Self.Answer" />
+          <EntitySet Name="Images" EntityType="Self.Image" />
+          <EntitySet Name="Questions" EntityType="Self.Question" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="Tests" EntityType="Self.Test" />
+          <EntitySet Name="Theories" EntityType="Self.Theory" />
+          <AssociationSet Name="FK_Answers_Questions" Association="Self.FK_Answers_Questions">
+            <End Role="Questions" EntitySet="Questions" />
+            <End Role="Answers" EntitySet="Answers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Test_Image" Association="Self.FK_Test_Image">
+            <End Role="Images" EntitySet="Images" />
+            <End Role="Tests" EntitySet="Tests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tests_Questions" Association="Self.FK_Tests_Questions">
+            <End Role="Tests" EntitySet="Tests" />
+            <End Role="Questions" EntitySet="Questions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Test_Theory" Association="Self.FK_Test_Theory">
+            <End Role="Theory" EntitySet="Theories" />
+            <End Role="Tests" EntitySet="Tests" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище QuizModelContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="Answers">
+            <EntityTypeMapping TypeName="QuizModel.Answer">
+              <MappingFragment StoreEntitySet="Answers">
+                <ScalarProperty Name="Answer_code" ColumnName="Answer_code" />
+                <ScalarProperty Name="Question_code" ColumnName="Question_code" />
+                <ScalarProperty Name="Answer_text" ColumnName="Answer_text" />
+                <ScalarProperty Name="Answer_flag" ColumnName="Answer_flag" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Images">
+            <EntityTypeMapping TypeName="QuizModel.Image">
+              <MappingFragment StoreEntitySet="Images">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Image_data" ColumnName="Image_data" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Questions">
+            <EntityTypeMapping TypeName="QuizModel.Question">
+              <MappingFragment StoreEntitySet="Questions">
+                <ScalarProperty Name="Question_code" ColumnName="Question_code" />
+                <ScalarProperty Name="Test_code" ColumnName="Test_code" />
+                <ScalarProperty Name="Question_text" ColumnName="Question_text" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="QuizModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tests">
+            <EntityTypeMapping TypeName="QuizModel.Test">
+              <MappingFragment StoreEntitySet="Tests">
+                <ScalarProperty Name="Test_code" ColumnName="Test_code" />
+                <ScalarProperty Name="Test_title" ColumnName="Test_title" />
+                <ScalarProperty Name="Test_GUID" ColumnName="Test_GUID" />
+                <ScalarProperty Name="Theory_flag" ColumnName="Theory_flag" />
+                <ScalarProperty Name="Theory_Source" ColumnName="Theory_Source" />
+                <ScalarProperty Name="Test_time" ColumnName="Test_time" />
+                <ScalarProperty Name="Questions_amount" ColumnName="Questions_amount" />
+                <ScalarProperty Name="Amount_for_pass" ColumnName="Amount_for_pass" />
+                <ScalarProperty Name="Image_code" ColumnName="Image_code" />
+                <ScalarProperty Name="Theory_code" ColumnName="Theory_code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Theories">
+            <EntityTypeMapping TypeName="QuizModel.Theory">
+              <MappingFragment StoreEntitySet="Theory">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Theory_data" ColumnName="Theory_data" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
